@@ -7,4 +7,8 @@
     <string name="SITUACION_CARD_TITLE">Situación</string>
     <string name="JUGADORES_CARD_TITLE">Jugadores</string>
     <string name="EQUIPOS_CARD_TITLE">Equipos</string>
+
+    <string name="duplicate">DUPLICATE</string>
+    <string name="schedule">SCHEDULE</string>
+    <string name="delete">DELETE</string>
 </resources>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="150dp" android:foreground="@drawable/card_foreground">
     card_view:cardCornerRadius="4dp"
@@ -49,5 +49,86 @@
         </View>
 
     </RelativeLayout>
+
+</android.support.v7.widget.CardView>-->
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    cardview:cardCornerRadius="@dimen/dimen_2dp"
+    cardview:cardElevation="@dimen/dimen_4dp"
+    cardview:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/cardRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/cardFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/imagenSeccion"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal|top"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+
+            <TextView
+                android:id="@+id/tituloSeccion"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textAlignment="center"
+                android:textSize="@dimen/dimen_28dp"/>
+
+            <LinearLayout
+                android:id="@+id/linearView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/colorPrimary"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/layoutButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/verSecciones"
+                        style="@style/Button"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:text="Ver" />
+
+
+                    <Button
+                        android:id="@+id/anadirSeccion"
+                        style="@style/Button"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:text="Añadir" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
 
 </android.support.v7.widget.CardView>

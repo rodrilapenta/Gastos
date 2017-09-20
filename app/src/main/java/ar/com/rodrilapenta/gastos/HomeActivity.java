@@ -1,7 +1,7 @@
 package ar.com.rodrilapenta.gastos;
 
+import android.animation.Animator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,25 +13,31 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ar.com.rodrilapenta.gastos.R;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+import ar.com.rodrilapenta.gastos.interfaces.RecyclerViewClickListener;
+
+import static ar.com.rodrilapenta.gastos.R.string.EQUIPOS_CARD_TITLE;
+
+public class HomeActivity extends AppCompatActivity implements RecyclerViewClickListener {
+
+    float pixelDensity;
+    boolean flag = true;
 
     private SessionManager sessionManager;
     private RecyclerView mRecyclerView;
@@ -40,9 +46,47 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tituloSeccion;
     private ImageView agregar;
     private ImageView escudo;
-    public static final int INTENT_ELEGIR_IMAGEN = 1;
     private Boolean imageSelected = false;
+    private List<Seccion> secciones = new ArrayList<Seccion>();
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        sessionManager = new SessionManager(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
+
+        /*RecyclerTouchListener r = new RecyclerTouchListener(this,
+                mRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, final int position) {
+                //Values are passing to activity & to fragment as well
+
+                manageClickEvent(view, position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                manageLongClickEvent(view, position);
+            }
+        });*/
+
+        //mRecyclerView.addOnItemTouchListener(r);
+
+        //if the content do not change
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        secciones.add(new Seccion(R.drawable.basketballteam, "Equipos"));
+        secciones.add(new Seccion(R.drawable.basketballplayer, "Jugadores"));
+        secciones.add(new Seccion(R.drawable.basketballfield, "Situación"));
+
+        mAdapter = new SeccionAdapter(secciones, HomeActivity.this, this);
+        mRecyclerView.setAdapter(mAdapter);
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -67,7 +111,22 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        String tituloSeccion = ((TextView) v.findViewById(R.id.tituloSeccion)).getText().toString();
+
+        switch (tituloSeccion) {
+            case "Equipos":
+                //onClickAgregar(tituloSeccion);
+                launchActionsMenu(v);
+                break;
+            default:
+                Toast.makeText(HomeActivity.this, "Click en otro lado", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /*class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private ClickListener clicklistener;
         private GestureDetector gestureDetector;
@@ -112,56 +171,14 @@ public class HomeActivity extends AppCompatActivity {
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        sessionManager = new SessionManager(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
-
-        RecyclerTouchListener r = new RecyclerTouchListener(this,
-                mRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-                //Values are passing to activity & to fragment as well
-
-                manageClickEvent(view, position);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                manageLongClickEvent(view, position);
-            }
-        });
-
-        mRecyclerView.addOnItemTouchListener(r);
-
-        //if the content do not change
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        List<Seccion> secciones = new ArrayList<Seccion>();
-        secciones.add(new Seccion(R.drawable.basketballteam, "Equipos"));
-        secciones.add(new Seccion(R.drawable.basketballplayer, "Jugadores"));
-        secciones.add(new Seccion(R.drawable.basketballfield, "Situación"));
-
-        mAdapter = new SeccionAdapter(secciones);
-        mRecyclerView.setAdapter(mAdapter);
-
-        agregar = (ImageView) findViewById(R.id.agregar);
-        tituloSeccion = (TextView) findViewById(R.id.textoSeccion);
-    }
+    }*/
 
     private void manageClickEvent(View seccion, int posicion) {
-        TextView textoSeccion = (TextView) seccion.findViewById(R.id.textoSeccion);
+        TextView textoSeccion = (TextView) seccion.findViewById(R.id.tituloSeccion);
 
         switch (textoSeccion.getText().toString()) {
             case "Equipos":
-                Toast.makeText(HomeActivity.this, getString(R.string.EQUIPOS_CARD_TITLE), Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, getString(EQUIPOS_CARD_TITLE), Toast.LENGTH_SHORT).show();
                 Intent intento = new Intent(HomeActivity.this, EquipoInfoActivity.class);
                 startActivity(intento);
                 break;
@@ -177,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void manageLongClickEvent(View seccion, int posicion) {
-        String textoSeccion = ((TextView) seccion.findViewById(R.id.textoSeccion)).getText().toString();
+        String textoSeccion = ((TextView) seccion.findViewById(R.id.tituloSeccion)).getText().toString();
 
         switch (textoSeccion) {
             case "Equipos":
@@ -195,13 +212,12 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickAgregar(View v) {
-        ViewGroup row = (ViewGroup) v.getParent();
-        TextView textoSeccion = (TextView) row.findViewById(R.id.textoSeccion);
+    public void onClickAgregar(String tituloSeccion) {
+        //ViewGroup row = (ViewGroup) v.getParent();
         final ViewGroup popupView = (ViewGroup) getLayoutInflater().inflate(R.layout.dialog_agregar_equipo, null);
 
 
-        switch (textoSeccion.getText().toString()) {
+        switch (tituloSeccion) {
             case "Equipos":
 
                 escudo = (ImageView) popupView.findViewById(R.id.escudoNuevoEquipo);
@@ -220,7 +236,7 @@ public class HomeActivity extends AppCompatActivity {
                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                         //utiliza la constante INTENT_ELEGIR_IMAGEN en onActivityResult
-                        startActivityForResult(chooserIntent, INTENT_ELEGIR_IMAGEN);
+                        startActivityForResult(chooserIntent, Utils.INTENT_ELEGIR_IMAGEN);
                     }
                 });
 
@@ -271,18 +287,116 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void launchActionsMenu(View view) {
+        String tituloSeccion = ((TextView) view.findViewById(R.id.tituloSeccion)).getText().toString();
+        final LinearLayout revealView = (LinearLayout) view.findViewById(R.id.linearView);
+        final LinearLayout layoutButtons = (LinearLayout) view.findViewById(R.id.layoutButtons);
+        final FrameLayout cardFrameLayout = (FrameLayout) view.findViewById(R.id.cardFrameLayout);
+        final RelativeLayout cardRelativeLayout = (RelativeLayout) view.findViewById(R.id.cardRelativeLayout);
+        ImageView imagenSeccion = (ImageView) view.findViewById(R.id.imagenSeccion);
+
+        /*
+         MARGIN_RIGHT = 16;
+         FAB_BUTTON_RADIUS = 28;
+         */
+        int x = cardFrameLayout.getRight();
+        int y = cardFrameLayout.getBottom();
+        x -= ((28 * pixelDensity) + (16 * pixelDensity));
+
+        int hypotenuse = (int) Math.hypot(cardFrameLayout.getWidth(), cardFrameLayout.getHeight());
+
+        if (flag) {
+
+            //accionesSeccion.setBackgroundResource(R.drawable.rounded_cancel_button);
+            //accionesSeccion.setImageResource(R.mipmap.image_cancel);
+
+            FrameLayout.LayoutParams parameters = (FrameLayout.LayoutParams)
+                    revealView.getLayoutParams();
+
+            parameters.height = cardFrameLayout.getHeight();
+            revealView.setLayoutParams(parameters);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(revealView, x, y, 0, hypotenuse);
+            anim.setDuration(150);
+
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    layoutButtons.setVisibility(View.VISIBLE);
+                    layoutButtons.startAnimation(Utils.getAlphaAnimation(HomeActivity.this));
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+
+            revealView.setVisibility(View.VISIBLE);
+            anim.start();
+
+            flag = false;
+        } else {
+
+            //imagenSeccion.setBackgroundResource(R.drawable.rounded_button);
+            //imagenSeccion.setImageResource(R.mipmap.anadirimagen);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(revealView, x, y, hypotenuse, 0);
+            anim.setDuration(200);
+
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    revealView.setVisibility(View.GONE);
+                    layoutButtons.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+
+            anim.start();
+            flag = true;
+        }
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Utils utils = Utils.getInstance();
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case INTENT_ELEGIR_IMAGEN:
+                case Utils.INTENT_ELEGIR_IMAGEN:
+
                     Uri selectedImageUri = data.getData();
 
                     if (selectedImageUri != null) {
                         try {
-                            escudo.setImageBitmap(decodeUri(selectedImageUri));
+                            utils.getEscudo().setImageBitmap(decodeUri(selectedImageUri));
                             imageSelected = true;
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
