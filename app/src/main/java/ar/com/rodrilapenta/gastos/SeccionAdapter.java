@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -100,6 +99,14 @@ public class SeccionAdapter extends RecyclerView.Adapter<SeccionAdapter.SeccionV
                     public void onClick(View view) {
                         Toast.makeText(context, context.getString(R.string.EQUIPOS_CARD_TITLE), Toast.LENGTH_SHORT).show();
                         Intent intento = new Intent(context, EquipoInfoActivity.class);
+                        context.startActivity(intento);
+                    }
+                });
+
+                viewHolder.anadir.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intento = new Intent(context, NuevoGastoActivity.class);
                         context.startActivity(intento);
                     }
                 });

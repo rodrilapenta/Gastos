@@ -1,5 +1,6 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="1"
@@ -16,6 +17,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top"
+            android:layout_alignParentTop="true"
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
@@ -50,15 +53,11 @@
                     android:hint="Contraseña"/>
             </android.support.design.widget.TextInputLayout>
 
-
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/content"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                app:srcCompat="@drawable/fingerprint"
+                android:layout_marginTop="36dp" />
 
             <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton
@@ -75,6 +74,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="65dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/content"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
 
             <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton

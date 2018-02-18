@@ -2,24 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ar.com.rodrilapenta.gastos">
 
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="ar.com.rodrilapenta.gastos.MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ar.com.rodrilapenta.gastos.Registrarse" />
-        <activity android:name="ar.com.rodrilapenta.gastos.HomeActivity" />
-        <activity android:name="ar.com.rodrilapenta.gastos.EquipoInfoActivity" />
-        <activity android:name="ar.com.rodrilapenta.gastos.JugadorInfoActivity" />
-        <activity android:name="ar.com.rodrilapenta.gastos.SituacionInfoActivity" />
+        <activity android:name=".Registrarse" android:screenOrientation="portrait" />
+        <activity android:name=".HomeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".EquipoInfoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".JugadorInfoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".SituacionInfoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".NuevoGastoActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

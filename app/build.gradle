@@ -6,12 +6,14 @@ android {
         config {
             keyAlias 'Gastos'
             keyPassword 'rodrigo'
-            storeFile file('C:/Users/Rodrigo/OneDrive/Copy/AndroidProjects/Gastos/gastos.jks')
+            storeFile file('D:/OneDrive/Copy/AndroidProjects/Gastos/gastos.jks')
+            //storeFile file('/Users/rodrigolapenta/OneDrive/Copy/AndroidProjects/Gastos/gastos.jks')
             storePassword 'rodrigo91'
         }
         debug {
             keyAlias 'androiddebugkey'
-            storeFile file('C:/Users/Rodrigo/.android/debug.keystore')
+            storeFile file('D:/OneDrive/Copy/AndroidProjects/Gastos/debug.keystore')
+            //storeFile file('/Users/rodrigolapenta/OneDrive/Copy/AndroidProjects/Gastos/debug.keystore')
             storePassword 'android'
         }
     }

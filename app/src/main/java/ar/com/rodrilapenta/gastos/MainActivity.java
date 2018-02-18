@@ -1,11 +1,18 @@
 package ar.com.rodrilapenta.gastos;
 
+import android.*;
+import android.app.KeyguardManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -14,11 +21,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.com.rodrilapenta.gastos.R;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+
+import ar.com.rodrilapenta.gastos.handlers.FingerprintHandler;
+import ar.com.rodrilapenta.gastos.utils.FingerprintUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText loginEmail, loginPassword;
     private final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
+    private FingerprintManager.CryptoObject cryptoObject;
+    private FingerprintManager fingerprintManager;
+    private KeyguardManager keyguardManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +100,53 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                startActivity(new Intent(MainActivity.this,Registrarse.class));
+            startActivity(new Intent(MainActivity.this,Registrarse.class));
             }
         });
+    }
+
+    private void startFingerprintConfig() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+            keyguardManager =
+                    (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+            fingerprintManager =
+                    (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+
+            if (!fingerprintManager.isHardwareDetected()) {
+                Toast.makeText(MainActivity.this, "Tu dispositivo no posee lector de huellas", Toast.LENGTH_SHORT).show();
+            }
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this, "Por favor permite a la aplicación utilizar el lector de huellas", Toast.LENGTH_SHORT).show();
+            }
+
+            if (!fingerprintManager.hasEnrolledFingerprints()) {
+                Toast.makeText(MainActivity.this, "No hay ninguna huella configurada en el dispositivo", Toast.LENGTH_SHORT).show();
+            }
+
+            if (!keyguardManager.isKeyguardSecure()) {
+                Toast.makeText(MainActivity.this, "Para usar tu huella debes tener activado el bloqueo de pantalla", Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    FingerprintUtil.generateKey();
+                } catch (FingerprintUtil.FingerprintException e) {
+                    e.printStackTrace();
+                }
+                if (FingerprintUtil.initCipher()) {
+                    cryptoObject = new FingerprintManager.CryptoObject(FingerprintUtil.getCipher());
+                    FingerprintHandler helper = new FingerprintHandler(this);
+                    helper.startAuth(fingerprintManager, cryptoObject);
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startFingerprintConfig();
     }
 
     @Override

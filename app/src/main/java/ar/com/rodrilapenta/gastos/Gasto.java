@@ -4,6 +4,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+
 /**
  * Created by arielverdugo on 7/6/17.
  */
@@ -12,79 +14,80 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Gasto {
 
     @DatabaseField(generatedId = true)
-    //private int id;
-    public int id;
-
+    private int id;
 
     @DatabaseField
-    private String nombre;
+    private String descripcion;
 
     @DatabaseField
-    private String apodo;
+    private String lugar;
 
     @DatabaseField
-    private String barrio;
+    private Double monto;
 
     @DatabaseField
-    private String direccion;
+    private Date fecha;
 
     @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] escudo;
+    private byte[] imagen;
 
 
     public Gasto(){}
 
-    public Gasto(String nombre, String apodo, String barrio, String direccion, byte[] escudo)
-    {
-        this.nombre = nombre;
-        this.apodo = apodo;
-        this.barrio = barrio;
-        this.direccion = direccion;
-        this.escudo = escudo;
-
+    public Gasto(int id, String descripcion, String lugar, Double monto, Date fecha, byte[] imagen) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.lugar = lugar;
+        this.monto = monto;
+        this.fecha = fecha;
+        this.imagen = imagen;
     }
 
-    public String getNombre() {
-        return nombre;
+    public int getId() {
+        return id;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getApodo() {
-        return apodo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setApodo(String apodo) {
-        this.apodo = apodo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getBarrio() {
-        return barrio;
+    public String getLugar() {
+        return lugar;
     }
 
-    public void setBarrio(String barrio) {
-        this.barrio = barrio;
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public Double getMonto() {
+        return monto;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setMonto(Double monto) {
+        this.monto = monto;
     }
 
-    public byte[] getEscudo()
-    {
-        return escudo;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setEscudo(byte[]escudo) {
-        this.escudo = escudo;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
+    public byte[] getImagen() {
+        return imagen;
+    }
 
-
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
 }
